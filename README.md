@@ -22,7 +22,6 @@ npm run build
 ```txt
 # required:
 DISCORD_TOKEN= # bot token. do not fucking share this shit with anyone that has no business having it
-SERVER_ID= # server to retrive player from, only works if the server exists and use mee6 leveling
 CLIENT_ID= # bot id
 
 # optional:
