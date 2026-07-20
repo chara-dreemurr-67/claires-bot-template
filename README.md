@@ -27,8 +27,6 @@ CLIENT_ID= # bot id
 
 # optional:
 ADMINISTRATOR_IDS= # an array of ids of bot admins as strings. this is an empty array by default
-MAX_TRIES= # maximum number of tries for a player. default is 5
-TIMEOUT_DURATION= # timeout after deleting account. default is 604800 seconds, or 1 week
 ```
 2. Register your bot's command: (Note: rerun this every time you modified the commands' property (name, description, options), or just make it run every time the bot starts)
 ```bash
