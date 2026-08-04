@@ -101,15 +101,7 @@ Client.on(Events.InteractionCreate, async Interaction => {
     }
     catch(Err) {
         console.error(Err);
-
-        if(!Interaction.replied && !Interaction.deferred) 
-            return await SendMessage(Interaction, "Something went wrong.");
-        
-        await Interaction.followUp({
-            content: "Something went wrong.",
-            allowedMentions: { repliedUser: false },
-            flags: MessageFlags.Ephemeral
-        });
+        return await SendMessage(Interaction, "Something went wrong.");
     }
     finally {
         if(Command.Cancelable) {

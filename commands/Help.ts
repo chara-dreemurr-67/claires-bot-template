@@ -13,6 +13,7 @@ import CommandManager from "../singletons/CommandManager.js";
 import Paginate from "../helpers/Paginate.js";
 import GetMaxPage from "../helpers/GetMaxPage.js";
 import ActionRowIDBuilder from "../helpers/ActionRowIDBuilder.js";
+import SendMessage from "../helpers/SendMessage.js";
 
 enum ButtonType {
     BackwardToStart,
@@ -76,11 +77,7 @@ export default {
             )
         ;
 
-        await Interaction.editReply({
-            embeds: [Embed],
-            components: MaxPage > 1 ? [ButtonRow] : undefined,
-            allowedMentions: { repliedUser: false }
-        })
+        await SendMessage(Interaction, [Embed], MaxPage > 1 ? [ButtonRow] : []);
     },
     Button: async (Interaction: ButtonInteraction): Promise<void> => {
         const [, ActionMeta, Owner]: string[] = Interaction.customId.split(":");
@@ -156,11 +153,7 @@ export default {
                 )
             )
         ;
-
-        await Interaction.update({
-            embeds: [Embed],
-            components: MaxPage > 1 ? [ButtonRow] : undefined,
-            allowedMentions: { repliedUser: false }
-        });
+        
+        await SendMessage(Interaction, [Embed], MaxPage > 1 ? [ButtonRow] : []);
     }
 } satisfies Command;
