@@ -4,7 +4,6 @@ dotenv.config();
 
 export default {
     DISCORD_TOKEN: process.env.DISCORD_TOKEN ?? "",
-    SERVER_ID: process.env.SERVER_ID ?? "",
     CLIENT_ID: process.env.CLIENT_ID ?? "",
     ADMINISTRATOR_IDS: ((): string[] => {
         try {
@@ -13,5 +12,6 @@ export default {
         catch {
             return [];
         }
-    })()
+    })(),
+    EMBED_EXPIRY_DURATION: /^\+?\d+$/.test(process.env.EMBED_EXPIRY_DURATION ?? "") ? Number(process.env.EMBED_EXPIRY_DURATION) : 900
 };

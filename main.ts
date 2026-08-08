@@ -1,8 +1,14 @@
-import { Client as C, GatewayIntentBits, Events, MessageFlags } from "discord.js";
-import type { Command } from "./types/Command.js";
+import {
+    Client as C,
+    GatewayIntentBits,
+    Events,
+    MessageFlags,
+    type AutocompleteFocusedOption
+} from "discord.js";
+import Command, { InteractionTypes } from "./types/Command.js";
 import CommandManager from "./singletons/CommandManager.js";
 import LoadEnv from "./singletons/LoadEnv.js";
-import SendMessage from "./helpers/SendMessage.js";
+import EmbedActionInteractionManager, { type Action } from "./singletons/EmbedActionInteractionManager.js";
 
 await CommandManager.LoadCommands();
 
@@ -17,64 +23,110 @@ Client.once(Events.ClientReady, Client => console.log(`Logged in as ${Client.use
 Client.on(Events.InteractionCreate, async Interaction => {
     if(Interaction.isAutocomplete()) {
         const Command: Command | undefined = CommandManager.Get(Interaction.commandName);
-        if(Command && Command.Autocomplete) {
+        if(Command) {
             if(Command.Administrator && !LoadEnv.ADMINISTRATOR_IDS.includes(Interaction.user.id)) 
                 return;
             
-            await Command.Autocomplete(Interaction, Client);
+            const FocusedOption: AutocompleteFocusedOption = Interaction.options.getFocused(true);
+            const Handler = Command.GetInteractionHandler(
+                InteractionTypes.Autocomplete,
+                FocusedOption.name
+            );
+
+            if(!Handler)
+                return;
+
+            await Handler(Interaction, Client);
         }
         return;
     }
 
     if(Interaction.isButton()) {
-        const [CommandName] = Interaction.customId.split(":");
-        const Command: Command | undefined = CommandManager.Get(CommandName);
-        if(!Command?.Button) 
+        if(!EmbedActionInteractionManager.Registry[Interaction.user.id])
+            return;
+        
+        const EmbedActionInteraction: Action = EmbedActionInteractionManager.Registry[Interaction.user.id][Interaction.customId];
+        const Command: Command | undefined = CommandManager.Get(EmbedActionInteraction.CommandName);
+        if(!Command) 
             return;
 
-        return await Command.Button(Interaction, Client);
+        const Handler = Command.GetInteractionHandler(
+            InteractionTypes.Button,
+            EmbedActionInteraction.ActionName
+        );
+        if(!Handler)
+            return;
+
+        return await Handler(Interaction, Client);
     }
 
     if(Interaction.isAnySelectMenu()) {
-        const [CommandName] = Interaction.customId.split(":");
-        const Command: Command | undefined = CommandManager.Get(CommandName);
+        const EmbedActionInteraction: Action = EmbedActionInteractionManager.Registry[Interaction.user.id][Interaction.customId];
+        if(!EmbedActionInteraction)
+            return;
 
+        const Command: Command | undefined = CommandManager.Get(EmbedActionInteraction.CommandName);
         if(!Command)
             return;
 
-        switch(true) {
-            case Interaction.isStringSelectMenu():
-                if(!Command.StringMenu)
-                    return;
+        const ActionName: string = EmbedActionInteraction.ActionName;
 
-                return await Command.StringMenu(Interaction, Client);
-            
-            case Interaction.isUserSelectMenu():
-                if(!Command.UserMenu)
-                    return;
-                
-                return await Command.UserMenu(Interaction, Client);
+        if(Interaction.isStringSelectMenu()) {
+            const Handler = Command.GetInteractionHandler(
+                InteractionTypes.StringMenu,
+                ActionName
+            );
 
-            case Interaction.isRoleSelectMenu():
-                if(!Command.RoleMenu)
-                    return;
-                
-                return await Command.RoleMenu(Interaction, Client);
-            
-            case Interaction.isChannelSelectMenu():
-                if(!Command.ChannelMenu)
-                    return;
-                
-                return await Command.ChannelMenu(Interaction, Client);
+            if(!Handler)
+                return;
 
-            case Interaction.isMentionableSelectMenu():
-                if(!Command.MentionableMenu)
-                    return;
-                
-                return await Command.MentionableMenu(Interaction, Client);
-            
-            default: return;
+            await Handler(Interaction, Client);
         }
+        else if(Interaction.isUserSelectMenu()) {
+            const Handler = Command.GetInteractionHandler(
+                InteractionTypes.UserMenu,
+                ActionName
+            );
+
+            if(!Handler)
+                return;
+            
+            await Handler(Interaction, Client);
+        }
+        else if(Interaction.isRoleSelectMenu()) {
+            const Handler = Command.GetInteractionHandler(
+                InteractionTypes.RoleMenu,
+                ActionName
+            );
+
+            if(!Handler)
+                return;
+            
+            await Handler(Interaction, Client);
+        }
+        else if(Interaction.isChannelSelectMenu()) {
+            const Handler = Command.GetInteractionHandler(
+                InteractionTypes.ChannelMenu,
+                ActionName
+            );
+
+            if(!Handler)
+                return;
+            
+            await Handler(Interaction, Client);
+        }
+        else if(Interaction.isMentionableSelectMenu()) {
+            const Handler = Command.GetInteractionHandler(
+                InteractionTypes.MentionableMenu,
+                ActionName
+            );
+
+            if(!Handler)
+                return;
+            
+            await Handler(Interaction, Client);
+        }
+        return;
     }
 
     if(!Interaction.isChatInputCommand()) 
@@ -86,22 +138,45 @@ Client.on(Events.InteractionCreate, async Interaction => {
     
     if(Command.Cancelable) {
         const Existing: AbortController | undefined = Command.Cancelable.Pool.get(Interaction.user.id);
-        if(Existing) 
-            return await SendMessage(Interaction, Command.Cancelable.Message ?? "This command is still running.");
+        if(Existing) {
+            await Interaction.reply({
+                content: Command.Cancelable.Message ?? "This command is still running.",
+                allowedMentions: { repliedUser: false },
+                flags: MessageFlags.Ephemeral
+            });
+            return;
+        }
         
         Command.Cancelable.Pool.set(Interaction.user.id, new AbortController());
     }
 
     try {
         console.log(`${Interaction.user.id}(${Interaction.user.username}) used ${Interaction.commandName}.`);
-        if(Command.Administrator && !LoadEnv.ADMINISTRATOR_IDS.includes(Interaction.user.id)) 
-            return await SendMessage(Interaction, "You are not permitted to use this command.");
+        if(Command.Administrator && !LoadEnv.ADMINISTRATOR_IDS.includes(Interaction.user.id)) {
+            await Interaction.reply({
+                content: "You are not permitted to use this command.",
+                allowedMentions: { repliedUser: false },
+                flags: MessageFlags.Ephemeral
+            });
+            return;
+        }
 
         await Command.Action(Interaction, Command.Cancelable?.Pool.get(Interaction.user.id)?.signal, Client);
     }
     catch(Err) {
         console.error(Err);
-        return await SendMessage(Interaction, "Something went wrong.");
+        if(Interaction.deferred || Interaction.replied) {
+            await Interaction.editReply({
+                content: "Something went wrong.",
+                allowedMentions: { repliedUser: false }
+            });
+            return;
+        }
+        await Interaction.reply({
+            content: "Something went wrong.",
+            allowedMentions: { repliedUser: false },
+            flags: MessageFlags.Ephemeral
+        });
     }
     finally {
         if(Command.Cancelable) {

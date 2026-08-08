@@ -1,12 +1,16 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import type { Command } from "../types/Command.js";
-import SendMessage from "../helpers/SendMessage.js";
+import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from "discord.js";
+import Command from "../types/Command.js";
 
-export default {
-    Command: new SlashCommandBuilder()
+export default new Command(
+    new SlashCommandBuilder()
         .setName("source")
         .setDescription("Prints the link to the GitHub repository of this bot.")
     ,
-    Action: async (Interaction: ChatInputCommandInteraction): Promise<void> => 
-        await SendMessage(Interaction, "https://github.com/chara-dreemurr-67/claires-bot-template")
-} satisfies Command;
+    async (Interaction: ChatInputCommandInteraction): Promise<void> => {
+        await Interaction.reply({
+            content: "https://github.com/chara-dreemurr-67/claires-bot-template",
+            allowedMentions: { repliedUser: false },
+            flags: MessageFlags.Ephemeral
+        });
+    }
+);

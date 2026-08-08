@@ -1,9 +1,9 @@
-import type { Command } from "../types/Command.js";
 import { pathToFileURL } from "url";
+import Command from "../types/Command.js";
 import fs from "fs/promises"; 
 import path from "path";
 
-class CommandManager {
+export default new class {
     private readonly Registry: Map<string, Command> = new Map<string, Command>();
     private Loaded: boolean = false;
 
@@ -44,6 +44,4 @@ class CommandManager {
     public Has(Name: string): boolean {
         return this.Registry.has(Name);
     }
-}
-
-export default new CommandManager();
+}();
