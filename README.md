@@ -26,6 +26,7 @@ CLIENT_ID= # bot id
 
 # optional:
 ADMINISTRATOR_IDS= # an array of ids of bot admins as strings. this is an empty array by default
+EMBED_EXPIRY_DURATION= # lifetime of embeds, this is 15 minutes (900 seconds) by default
 ```
 2. Register your bot's command: (Note: rerun this every time you modified the commands' property (name, description, options), or just make it run every time the bot starts)
 ```bash

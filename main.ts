@@ -42,10 +42,20 @@ Client.on(Events.InteractionCreate, async Interaction => {
     }
 
     if(Interaction.isButton()) {
-        if(!EmbedActionInteractionManager.Registry[Interaction.user.id])
+        if(!EmbedActionInteractionManager.Registry[Interaction.user.id]) 
             return;
         
         const EmbedActionInteraction: Action = EmbedActionInteractionManager.Registry[Interaction.user.id][Interaction.customId];
+
+        if(!EmbedActionInteraction) {
+            await Interaction.reply({
+                content: "This interaction has been expired, or it is not belong to you.",
+                allowedMentions: { repliedUser: false },
+                flags: MessageFlags.Ephemeral
+            });
+            return;
+        }
+
         const Command: Command | undefined = CommandManager.Get(EmbedActionInteraction.CommandName);
         if(!Command) 
             return;
