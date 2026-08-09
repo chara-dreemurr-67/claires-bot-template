@@ -20,7 +20,7 @@ export default new Command(
 
         if(!Command) {
             await Interaction.reply({
-                content: `Command "${Interaction.commandName}" doesn't exist.`,
+                content: `Command "${Target}" doesn't exist.`,
                 allowedMentions: { repliedUser: false },
                 flags: MessageFlags.Ephemeral
             });
@@ -29,7 +29,7 @@ export default new Command(
 
         if(!Command.Cancelable) {
             await Interaction.reply({
-                content: `Command "${Interaction.commandName}" is not cancelable.`,
+                content: `Command "${Target}" is not cancelable.`,
                 allowedMentions: { repliedUser: false },
                 flags: MessageFlags.Ephemeral
             });
@@ -40,7 +40,7 @@ export default new Command(
 
         if(!Controller) {
             await Interaction.reply({
-                content: `Command "${Interaction.commandName}" is currently not running.`,
+                content: `Command "${Target}" is currently not running.`,
                 allowedMentions: { repliedUser: false },
                 flags: MessageFlags.Ephemeral
             });
