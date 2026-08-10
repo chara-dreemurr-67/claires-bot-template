@@ -9,12 +9,12 @@ import {
     type SlashCommandOptionsOnlyBuilder
 } from "discord.js";
 import ConstructButtonRow, { ButtonType } from "../helpers/ConstructNavigationButtonRow.js";
-import Command, { InteractionTypes } from "../types/Command.js";
 import CommandManager from "../singletons/CommandManager.js";
 import Paginate from "../helpers/Paginate.js";
 import GetMaxPage from "../helpers/GetMaxPage.js";
 import EmbedActionInteractionManager from "../singletons/EmbedActionInteractionManager.js";
 import CreateNavigationButtonHandler from "../helpers/CreateNavigationButtonHandler.js";
+import Command, { InteractionTypes } from "../types/Command.js";
 
 interface InteractionMeta {
     CurrentPage: number;
@@ -50,33 +50,32 @@ export default Command.New(C)
                 [ButtonType.ForwardToEnd]: ""
             }
         };
+        const MetaID: string = EmbedActionInteractionManager.AddMeta(InteractionMeta);
         
-        const BackwardToStartID: [string, string] = EmbedActionInteractionManager.AddInteraction(
-            UserID,
-            CommandName,
-            ButtonType.BackwardToStart,
-            InteractionMeta
-        );
-
         const InteractionIDs: Record<ButtonType, string> = {
-            [ButtonType.BackwardToStart]: BackwardToStartID[0],
+            [ButtonType.BackwardToStart]: EmbedActionInteractionManager.AddInteraction(
+                UserID,
+                CommandName,
+                ButtonType.BackwardToStart,
+                MetaID
+            ),
             [ButtonType.Backward]: EmbedActionInteractionManager.AddInteraction(
                 UserID,
                 CommandName,
                 ButtonType.Backward,
-                BackwardToStartID[1]
+                MetaID
             ),
             [ButtonType.Forward]: EmbedActionInteractionManager.AddInteraction(
                 UserID,
                 CommandName,
                 ButtonType.Forward,
-                BackwardToStartID[1]
+                MetaID
             ),
             [ButtonType.ForwardToEnd]: EmbedActionInteractionManager.AddInteraction(
                 UserID,
                 CommandName,
                 ButtonType.ForwardToEnd,
-                BackwardToStartID[1]
+                MetaID
             )
         };
 
