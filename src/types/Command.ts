@@ -29,7 +29,7 @@ export default abstract class Command {
     public abstract Action(
         Interaction: ChatInputCommandInteraction,
         { Signal, Client }: { Signal?: AbortSignal; Client?: Client }
-    ): Promise<unknown>;
+    ): Promise<any>; // Caller doesn't use return type.
     
     public GetInteractionHandler<T extends InteractionTypes>(
         InteractionType: T,

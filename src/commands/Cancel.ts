@@ -22,7 +22,7 @@ export default class Cancel extends Command {
         )
     ;
 
-    public async Action(Interaction: ChatInputCommandInteraction): Promise<unknown> {
+    public async Action(Interaction: ChatInputCommandInteraction): Promise<any> {
         const Target: string = Interaction.options.getString("command", true);
         const Command: Command | undefined = CommandManager.CommandRegistry.get(Target);
 
@@ -61,7 +61,7 @@ export default class Cancel extends Command {
     }
 
     @InteractionRegistry(InteractionTypes.Autocomplete, "command")
-    public async command(Interaction: AutocompleteInteraction): Promise<unknown> {
+    public async command(Interaction: AutocompleteInteraction): Promise<void> {
         return await Interaction.respond([...
             CommandManager.CommandRegistry.values()
                 .filter(

@@ -1,4 +1,4 @@
-import type { SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, Client } from "discord.js";
+import type { SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction } from "discord.js";
 import {
     MessageFlags,
     SlashCommandBuilder
