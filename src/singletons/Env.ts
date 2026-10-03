@@ -32,18 +32,21 @@ export default new class EnvLoader {
      * 
      * @throws If reported type doesn't match with the variable's actual type (won't throw for this if variable is string),if registered variable doesn't exist in process.env and there is no default value provided, or if the type of {@link Default} doesn't match with the reported type of the variable.
      */
-    public RegisterVariable<T extends VariableTypes>(
+    public RegisterVariable<T extends VariableTypes = VariableTypes.String>(
         Name: string,
-        Type: T = VariableTypes.String as T,
         {
+            Type,
             Default,
             Parser
-        }: { Default?: TypeMap[T]; Parser?: (Env: string) => unknown[]; } = {}
+        }: { Type?: T, Default?: TypeMap[T]; Parser?: (Env: string) => unknown[]; } = {}
     ): this {
         if(this.Variables.has(Name))
             return this;
 
         const Env: string | undefined = process.env[Name];
+
+        if(!Type)
+            Type = VariableTypes.String as T;
 
         switch(Type) {
             case VariableTypes.String:
