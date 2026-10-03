@@ -1,11 +1,9 @@
-import { ButtonBuilder, ButtonStyle, ActionRowBuilder } from "discord.js";
-
-export enum ButtonType {
-    BackwardToStart = "BackwardToStart",
-    Backward = "Backward",
-    Forward = "Forward",
-    ForwardToEnd = "ForwardToEnd"
-};
+import {
+    ButtonBuilder,
+    ButtonStyle,
+    ActionRowBuilder
+} from "discord.js";
+import ButtonType from "#types/ButtonType";
 
 const ButtonLable: Record<ButtonType, string> = {
     [ButtonType.BackwardToStart]: "⇇",

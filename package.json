@@ -1,18 +1,37 @@
 {
-  "devDependencies": {
-    "@types/node": "^26.1.1",
-    "tsx": "^4.23.11",
-    "typescript": "^7.0.2"
+  "name": "claires-bot-template-v2",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/chara-dreemurr-67/claires-bot-template#readme",
+  "bugs": {
+    "url": "https://github.com/chara-dreemurr-67/claires-bot-template/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chara-dreemurr-67/claires-bot-template.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "dev": "tsx main.ts",
+    "build": "tsc",
+    "start": "node ./public/main.js"
   },
   "dependencies": {
     "discord.js": "^14.27.0",
-    "dotenv": "^17.4.2"
+    "dotenv": "^18.0.5"
   },
-  "type": "module",
-  "scripts": {
-    "dev": "tsx main.ts",
-    "start": "node public/main.js",
-    "deploy": "tsx DeployCommands.ts",
-    "build": "tsc"
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "imports": {
+    "#helpers/*": ["./public/helpers/*.js"],
+    "#types/*": ["./public/types/*.js"],
+    "#decorators/*": ["./public/decorators/*.js"],
+    "#*": ["./public/singletons/*.js"]
   }
 }
