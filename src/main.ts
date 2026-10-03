@@ -103,8 +103,10 @@ Client.on(Events.InteractionCreate, async Interaction => {
         console.log(`${Interaction.user.id}(${Interaction.user.username}) used ${Interaction.commandName}.`);
         await Command.Action(
             Interaction,
-            Command.Pool?.get(Interaction.user.id)?.signal,
-            Client
+            {
+                Signal: Command.Pool?.get(Interaction.user.id)?.signal,
+                Client: Client
+            }
         );
     }
     catch(Err) {

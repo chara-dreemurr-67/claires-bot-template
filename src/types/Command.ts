@@ -1,7 +1,7 @@
-import type {
-    ChatInputCommandInteraction,
-    SlashCommandBuilder,
-    SlashCommandOptionsOnlyBuilder,
+import {
+    type ChatInputCommandInteraction,
+    type SlashCommandBuilder,
+    type SlashCommandOptionsOnlyBuilder,
     Client
 } from "discord.js";
 import InteractionTypes from "./InteractionTypes.js";
@@ -26,7 +26,10 @@ export default abstract class Command {
     public readonly Pool?: Map<string, AbortController>;
     public readonly CancelMessage?: string;
     
-    public abstract Action(Interaction: ChatInputCommandInteraction, Signal?: AbortSignal, Client?: Client): Promise<unknown>;
+    public abstract Action(
+        Interaction: ChatInputCommandInteraction,
+        { Signal, Client }: { Signal?: AbortSignal; Client?: Client }
+    ): Promise<unknown>;
     
     public GetInteractionHandler<T extends InteractionTypes>(
         InteractionType: T,
