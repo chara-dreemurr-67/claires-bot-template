@@ -1,5 +1,5 @@
-import Env from "#Env";
 import GenerateUUID from "#helpers/GenerateUUID";
+import Env from "commaenv";
 import EventEmitter from "events";
 
 export interface Embed {
