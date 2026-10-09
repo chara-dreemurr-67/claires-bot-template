@@ -61,25 +61,25 @@ export default class Help extends Command {
                     UserID,
                     CommandName,
                     ButtonType.BackwardToStart,
-                    MetaID
+                    { MetaID }
                 ),
                 [ButtonType.Backward]: EmbedManager.AddEmbed(
                     UserID,
                     CommandName,
                     ButtonType.Backward,
-                    MetaID
+                    { MetaID }
                 ),
                 [ButtonType.Forward]: EmbedManager.AddEmbed(
                     UserID,
                     CommandName,
                     ButtonType.Forward,
-                    MetaID
+                    { MetaID }
                 ),
                 [ButtonType.ForwardToEnd]: EmbedManager.AddEmbed(
                     UserID,
                     CommandName,
                     ButtonType.ForwardToEnd,
-                    MetaID
+                    { MetaID }
                 )
             };
 
@@ -144,7 +144,7 @@ export default class Help extends Command {
     @AddNavigationButtonHandler()
     public async NavButtonHandler(Interaction: ButtonInteraction, Type: ButtonType): Promise<void> {
         const InteractionMeta: InteractionMeta | undefined = EmbedManager.GetMeta<InteractionMeta>(
-            Interaction.user.id, 
+            Interaction.user.id,
             Interaction.customId
         );
         
