@@ -7,6 +7,11 @@ import {
 import InteractionTypes from "./InteractionTypes.js";
 import type { InteractionHandler, InteractionHandlersRegistry, InteractionMap } from "#types/InteractionHandler";
 
+interface Cancelable {
+    Pool: Map<string, AbortController>;
+    CancelMessage?: string;
+}
+
 export default abstract class Command {
     public readonly InteractionHandlers: InteractionHandlersRegistry = {
         [InteractionTypes.Autocomplete]: new Map(),
@@ -20,16 +25,13 @@ export default abstract class Command {
 
     public abstract readonly Command: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
     
+    public readonly Cancelable?: Cancelable;
     public readonly Administrator: boolean = false;
-    public readonly Cancelable: boolean = false;
-
-    public readonly Pool?: Map<string, AbortController>;
-    public readonly CancelMessage?: string;
     
     public abstract Action(
         Interaction: ChatInputCommandInteraction,
         { Signal, Client }: { Signal?: AbortSignal; Client?: Client }
-    ): Promise<any>; // Caller doesn't use return type.
+    ): Promise<any>; // Caller doesn't use return value.
     
     public GetInteractionHandler<T extends InteractionTypes>(
         InteractionType: T,
@@ -37,4 +39,4 @@ export default abstract class Command {
     ): InteractionHandler<InteractionMap[T]> | undefined {
         return this.InteractionHandlers[InteractionType].get(Name);
     }
-};
+}

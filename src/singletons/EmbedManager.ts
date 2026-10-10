@@ -34,8 +34,10 @@ export default new class EmbedManager extends EventEmitter {
         OwnerID: string,
         CommandName: string,
         ActionName: string,
-        MetaID?: string,
-        CoOwners?: string[]
+        {
+            MetaID,
+            CoOwners
+        }: { MetaID?: string; CoOwners?: string[]; }
     ): string {
         this.EmbedRegistry[OwnerID] ??= {};
         const EmbedID: string = GenerateUUID(UUID => !!this.EmbedRegistry[OwnerID][UUID]);

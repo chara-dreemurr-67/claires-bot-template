@@ -5,7 +5,7 @@ import ButtonType from "#types/ButtonType";
 
 type NavigationButtonHandler = (Interaction: ButtonInteraction, Type: ButtonType, Client: Client) => Promise<unknown>;
 
-export default (Discriminator: string = "") => (
+export default (Discriminator?: string) => (
     Method: NavigationButtonHandler,
     Context: ClassMethodDecoratorContext<
         Command,
@@ -14,7 +14,7 @@ export default (Discriminator: string = "") => (
 ): void => Context.addInitializer(function(): void {
     Object.values(ButtonType).forEach(ButtonType => {
         this.InteractionHandlers.Button.set(
-            `${Discriminator}${ButtonType}`,
+            `${Discriminator ?? ""}${ButtonType}`,
             (Interaction: ButtonInteraction, Client: Client): Promise<unknown> =>
                 Method.call(this, Interaction, ButtonType, Client)
         );
