@@ -3,5 +3,5 @@ enum ButtonType {
     Backward = "Backward",
     Forward = "Forward",
     ForwardToEnd = "ForwardToEnd"
-};
+}
 export default ButtonType;

@@ -34,10 +34,7 @@ export default new class EmbedManager extends EventEmitter {
         OwnerID: string,
         CommandName: string,
         ActionName: string,
-        {
-            MetaID,
-            CoOwners
-        }: { MetaID?: string; CoOwners?: string[]; }
+        { MetaID, CoOwners }: { MetaID?: string; CoOwners?: string[]; } = {}
     ): string {
         this.EmbedRegistry[OwnerID] ??= {};
         const EmbedID: string = GenerateUUID(UUID => !!this.EmbedRegistry[OwnerID][UUID]);
@@ -50,7 +47,7 @@ export default new class EmbedManager extends EventEmitter {
                 delete this.EmbedRegistry[OwnerID][EmbedID];
             }, Env.GetVariable<number>("EMBED_EXPIRY_DURATION") * 1000),
             CoOwners
-        }
+        };
 
         if(MetaID) {
             if(!this.MetaRegistry[MetaID])

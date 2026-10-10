@@ -21,9 +21,8 @@ const Client: C = new C({
         GatewayIntentBits.DirectMessages
     ]
 });
-
-Client.once(Events.ClientReady, Client => console.log(`Logged in as ${Client.user.tag}`));
-Client.on(Events.InteractionCreate, async Interaction => {
+Client.once(Events.ClientReady, Client => console.log(`Logged in as ${Client.user.tag}`))
+.on(Events.InteractionCreate, async Interaction => {
     if(Interaction.isAutocomplete()) {
         const Command: Command | undefined = CommandManager.CommandRegistry.get(Interaction.commandName);
 
@@ -55,7 +54,6 @@ Client.on(Events.InteractionCreate, async Interaction => {
             return;
 
         let Type: InteractionTypes;
-
         switch(true) {
             case Interaction.isStringSelectMenu(): Type = InteractionTypes.StringMenu; break;
             case Interaction.isUserSelectMenu(): Type = InteractionTypes.UserMenu; break;
@@ -124,8 +122,7 @@ Client.on(Events.InteractionCreate, async Interaction => {
         });
     }
     finally {
-        Command.Cancelable?.Pool.delete(Interaction.user.id);
-        return;
+        return Command.Cancelable?.Pool.delete(Interaction.user.id);
     }
-});
-Client.login(Env.GetVariable("DISCORD_TOKEN"));
+})
+.login(Env.GetVariable("DISCORD_TOKEN"));
