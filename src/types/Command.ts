@@ -4,7 +4,7 @@ import {
     type SlashCommandOptionsOnlyBuilder,
     Client
 } from "discord.js";
-import InteractionTypes from "./InteractionTypes.js";
+import InteractionTypes from "#types/InteractionTypes";
 import type { InteractionHandler, InteractionHandlersRegistry, InteractionMap } from "#types/InteractionHandler";
 
 interface Cancelable {
@@ -21,7 +21,7 @@ export default abstract class Command {
         [InteractionTypes.RoleMenu]: new Map(),
         [InteractionTypes.ChannelMenu]: new Map(),
         [InteractionTypes.MentionableMenu]: new Map()
-    }
+    };
 
     public abstract readonly Command: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
     

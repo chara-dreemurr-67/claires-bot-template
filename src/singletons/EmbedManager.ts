@@ -66,6 +66,10 @@ export default new class EmbedManager extends EventEmitter {
         delete this.EmbedRegistry[OwnerID][EmbedID];
     }
 
+    public GetEmbed(OwnerID: string, EmbedID: string): Embed | undefined {
+        return this.EmbedRegistry[OwnerID]?.[EmbedID];
+    }
+
     public RefreshInteraction(OwnerID: string, EmbedID: string): void {
         if(!this.EmbedRegistry[OwnerID]?.[EmbedID])
             return;

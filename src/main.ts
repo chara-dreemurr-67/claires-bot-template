@@ -38,7 +38,7 @@ Client.once(Events.ClientReady, Client => console.log(`Logged in as ${Client.use
     }
 
     if(Interaction.isButton()) {
-        const Embed: Embed = EmbedManager.EmbedRegistry[Interaction.user.id]?.[Interaction.customId];
+        const Embed: Embed | undefined = EmbedManager.GetEmbed(Interaction.user.id, Interaction.customId);
         if(!Embed)
             return;
         
@@ -49,7 +49,7 @@ Client.once(Events.ClientReady, Client => console.log(`Logged in as ${Client.use
     }
 
     if(Interaction.isAnySelectMenu()) {
-        const Embed: Embed = EmbedManager.EmbedRegistry[Interaction.user.id]?.[Interaction.customId];
+        const Embed: Embed | undefined = EmbedManager.GetEmbed(Interaction.user.id, Interaction.customId);
         if(!Embed)
             return;
 
